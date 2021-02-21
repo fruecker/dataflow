@@ -1,7 +1,9 @@
-import tkinter
+import tkinter as tk
 from tkinter.simpledialog import *
 import sys
 import os
+
+from runtime_handler import RuntimeHandler
 
 #### DOCS #####
 #
@@ -17,19 +19,25 @@ if os.environ.get('DISPLAY','') == '':
     print('no display found. Using :0.0')
     os.environ.__setitem__('DISPLAY', ':0.0')
 
-# Create main window
-master = tkinter.Tk()
-master.title("Dataflow")
-master.geometry("400x400")
+class MainWindow(tk.Frame):
+    def __init__(self, runtimeHandler,*args, **kwargs):
+        tk.Frame.__init__(self, *args, **kwargs)
+        self.button = tk.Button(
+                self, text='+ Neuer Patient', 
+                command=runtimeHandler.process
+            ).pack(
+                padx=10, pady=20, fill='x'
+            )
 
-# make a label for the window
-label1 = tkinter.Label(master, text='Hellooooo')
-# Lay out label
-label1.pack()
 
-# f = askfloat('askfloat', 'put in a float value:')
-d = Dialog(label1, 'Dialog')
-print(d, type(d))
+if __name__ == '__main__':
+    root = tk.Tk()
+    root.title('Dataflow')
+    root.geometry('200x200')
 
-# Run forever
-master.mainloop()
+    runtimeHandler = RuntimeHandler()
+
+    main = MainWindow(master=root,runtimeHandler=runtimeHandler)
+    main.pack(side='top', fill='both', expand=True)
+
+    root.mainloop()
